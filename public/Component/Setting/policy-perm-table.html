@@ -1,0 +1,37 @@
+<div class="overflow-x-auto">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Edit</th>
+                <th>Read</th>
+                <th>Create</th>
+                <th>Delete</th>
+            </tr>
+        </thead>
+        <tbody>
+            <template x-data="{permissions: item, test: 12}" x-for="(permission, index) in permissions">
+            <tr>
+                <th x-text="index">1</th>
+                <template x-for="(perm, key) in permission">
+                    <td>
+                        <template x-if="perm==true">
+                            <div>
+                                <span class="cursor-pointer text-green-600" @click="perm=false"><i class="fa-solid fa-check"></i></span>
+                                <input type="hidden" :name="'permissions' + '->' +index + '->' + key" value="true">
+                            </div>
+                        </template>
+                        <template x-if="perm==false">
+                            <div>
+                                <span class="cursor-pointer text-red-600" @click="perm=true"><i class="fa-solid fa-xmark"></i></span>
+                                <input type="hidden" :name="'permissions' + '->' +index + '->' + key" value="false">
+                            </div>
+                        </template>
+                    </td>
+                </template>
+            </tr>
+            </template>
+        </tbody>
+    </table>
+    <button type="submit" class="btn btn-sm btn-neutral mt-3">Submit</button>
+</div>

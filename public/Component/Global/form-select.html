@@ -1,0 +1,10 @@
+<div class="field field_view">
+    <div class="field__label" x-text="name"></div>
+    <div class="field__wrap">
+        <select class="select">
+            <template x-data="{items: choices}" x-for="choice in items">
+                <option x-text="choice.name"></option>
+            </template>
+        </select>
+    </div>
+</div>

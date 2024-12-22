@@ -1,0 +1,6 @@
+composer.lock
+.vscode
+vendor
+tests
+deploy.sh
+.env

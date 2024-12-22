@@ -1,0 +1,24 @@
+<div>
+    <h3 class="text-capitalize">List</h3>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th>Name</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <template x-data="{policies: item}" x-for="(policy, index) in policies">
+            <tr>
+                <td scope="row"><span class="text-capitalize" x-text="policy.id" /></td>
+                <td><span class="text-capitalize" x-text="policy.name" /></td>
+                <td>
+                    <a x-data="{url: '/policies/' + policy.name}" :href="url">View</a>
+                    <a x-data="{url: '/policies/' + policy.name + '/edit'}" :href="url">Edit</a>
+                </td>
+            </tr>
+            </template>
+        </tbody>
+    </table>
+</div>

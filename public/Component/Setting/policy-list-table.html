@@ -1,0 +1,20 @@
+<div class="overflow-x-auto">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Name</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <template x-data="{policies: item}" x-for="policy in policies">
+            <tr>
+                <th x-text="policy.id"></th>
+                <td x-text="policy.name"></td>
+                <td><a :href="'/settings/policies/'+policy.name">View</a></td>
+            </tr>
+            </template>
+        </tbody>
+    </table>
+</div>

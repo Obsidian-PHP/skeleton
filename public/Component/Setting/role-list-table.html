@@ -1,0 +1,22 @@
+<div class="overflow-x-auto">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Name</th>
+                <th>Prefix</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <template x-data="{roles: item}" x-for="role in roles">
+            <tr>
+                <th x-text="role.id"></th>
+                <td x-text="role.name"></td>
+                <td x-text="role.prefix"></td>
+                <td><a :href="'/settings/roles/'+role.name">View</a></td>
+            </tr>
+            </template>
+        </tbody>
+    </table>
+</div>

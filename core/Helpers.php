@@ -3,6 +3,7 @@
 use Core\Http\Security\Csrf;
 use Core\Http\Service\Container;
 use Core\Http\User\LoggedUser;
+use Core\View;
 
 function loggedUser(): LoggedUser
 {
@@ -59,4 +60,10 @@ function getString($string, $delimiter) {
         // If / is not found, return the original string
         return $string;
     }
+}
+
+function view(string $name, ?string $layout = null, array $params = []): View
+{
+    $layout = $layout ?? View::$MAIN_LAYOUT;
+    return new View($name, $layout, $params);
 }

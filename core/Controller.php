@@ -30,7 +30,7 @@ abstract class Controller
         return $user;
     }
 
-    function view(string $name, ?string $layout = null, array $params = []): View
+    public function view(string $name, ?string $layout = null, array $params = []): View
     {
         $layout = $layout ?? View::$MAIN_LAYOUT;
         return new View($name, $layout, $params);

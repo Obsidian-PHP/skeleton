@@ -14,7 +14,7 @@ use Core\Database\Database;
     name: 'migration:migrate',
     hidden: false,
 )]
-class MigrateCommand extends Command
+class MigrateCommand extends \Core\Command
 {
     protected function configure(): void
     {
@@ -23,6 +23,7 @@ class MigrateCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
+        $this->initObsidian();
         $io = new SymfonyStyle($input, $output);
         $file = $input->getArgument('file');
 

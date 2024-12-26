@@ -2,6 +2,7 @@
 namespace Core;
 use Core\Command\CreateMigrationCommand;
 use Core\Command\MakeControllerCommand;
+use Core\Command\MakeEntityCommand;
 use Core\Command\MigrateCommand;
 use Core\Command\TestCommand;
 use Core\Http\Service\Container;
@@ -14,7 +15,7 @@ class RegisterCommand {
         $commmandManager->add(new MigrateCommand());
         $commmandManager->add(new CreateMigrationCommand());
         $commmandManager->add(new MakeControllerCommand());
-        $commmandManager->add(new TestCommand());
+        $commmandManager->add(new MakeEntityCommand());
 
         // Auto register command
         Container::get()->registerCommand($commmandManager);

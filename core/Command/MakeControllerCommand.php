@@ -15,17 +15,12 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 )]
 class MakeControllerCommand extends \Core\Command
 {
-    protected function configure(): void
-    {
-        $this->addArgument('name', InputArgument::REQUIRED, 'Create controller file.');
-    }
-
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $this->initObsidian();
         $io = new SymfonyStyle($input, $output);
-        $fileName = $input->getArgument('name');
-
+        $fileName = $io->ask('What is the controller name ?');
+        
         // Make controller
         $controllerPath = dirname(__DIR__, 2) . '/App/Http/Controller/' . $fileName . 'Controller.php';
         $controllerRoute = strtolower($fileName);
@@ -75,8 +70,6 @@ class %sController extends Controller
         } else {
             $io->error('Hmmm ! Error');
         }
-
-
 
         return COMMAND::SUCCESS;
     }

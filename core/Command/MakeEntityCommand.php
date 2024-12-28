@@ -1,12 +1,12 @@
 <?php
 namespace Core\Command;
 
-use Core\Http\Service\Container;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
+use Symfony\Component\Filesystem\Filesystem;
 
 #[AsCommand(
     name: 'make:entity',
@@ -22,43 +22,41 @@ class MakeEntityCommand extends \Core\Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $this->initObsidian();
+        $filesystem = new Filesystem();        
+
         $io = new SymfonyStyle($input, $output);
         $entityName = $io->ask('What is the entity name ?');
 
         if ($entityName)
         {
             // Make Repository
-            $repositoryPath = dirname(__DIR__, 2) . '/App/Domain/' . $entityName . '/' . $entityName . 'Repository.php';
+            $templatePath = dirname(__DIR__, 1).'/Template/template_repository.php';
+            $repositoryPath = dirname(__DIR__, 2) . '/app/Domain/' . $entityName . '/' . $entityName . 'Repository.php';
             $propertyName = strtolower($entityName) . 'Repository';
             $className = $entityName . 'Repository';
             $tableName = strtolower($entityName) . 's';
-            $repositoryContent = sprintf('<?php namespace App\Domain\%s;
 
-use Core\Http\Register;
-use Core\Repository;
-use Illuminate\Support\Collection;
+            $placeholders = [
+                '{{propertyName}}' => $propertyName,
+                '{{className}}' => $className,
+                '{{tableName}}' => $tableName,
+                '{{entityName}}' => $entityName
+            ];
+            $req = $this->generateClass($templatePath, $repositoryPath, $placeholders);
 
-#[Register("%s", %s::class)]
-class %s extends Repository
-{
-    public function getAll(): Collection
-    {
-        return $this->table("%s")
-            ->get();
-    }
-
-    public function getSingle(int $id): object
-    {
-        return $this->table("%s")
-            ->where("id", $id)
-            ->first();
-    }
-}',$entityName, $propertyName, $className, $className, $tableName, $tableName);
-            $crateRepository = Container::get()->file->createAndWriteFile($repositoryPath, $repositoryContent);
             
-            if ($crateRepository)
+            if ($req)
             {
-                $io->success('Successfull make repository : ' . $className);
+                // Create property
+                $filename = dirname(__DIR__, 2) . '/app/Registry/RegisterContainer.php';
+                $currentContent = file_get_contents($filename);
+                $newPropertyCode = "\n    public \$".$propertyName.";\n";
+                $updatedContent = preg_replace(
+                    '/class\s+(\w+)\s*\{/',
+                    "class $1 {\n$newPropertyCode",
+                    $currentContent
+                );
+                $filesystem->dumpFile($filename, $updatedContent);
             }
         }
         

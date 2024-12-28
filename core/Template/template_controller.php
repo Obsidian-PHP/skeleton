@@ -1,0 +1,15 @@
+<?php
+namespace App\Http\Controller;
+
+use Core\Controller;
+use Core\Http\Router\Route;
+use Core\View;
+
+class {{name}} extends Controller
+{
+    #[Route('/{{route}}', 'GET')]
+    public function list(): view
+    {
+        return $this->view('{{view}}');
+    }
+}

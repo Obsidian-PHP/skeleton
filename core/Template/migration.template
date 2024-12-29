@@ -1,0 +1,31 @@
+<?php
+namespace App\Migration;
+
+use Core\Database\Migration\Migration;
+use Core\Database\Migration\MigrationInterface;
+use Illuminate\Database\Schema\Blueprint;
+
+class {{name}}Migration extends Migration implements MigrationInterface
+{
+    /**
+     * Run the migrations.
+     *
+     * @return void
+     */
+    public function up(): void
+    {
+        $this->schema->create('{{tableName}}', function (Blueprint $table) {
+            $table->id();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down(): void
+    {
+
+    }
+}

@@ -35,7 +35,7 @@ class Command extends \Symfony\Component\Console\Command\Command
         try {
             return sprintf(__DIR__.'/Template/%s.template', $name);
         } catch (\Exception $th) {
-            return sprintf('Error : %s', $th);  
+            return sprintf('Error : %s', $name);  
         }
         
     }

@@ -18,25 +18,9 @@ class MakeControllerCommand extends \Core\Command
         $this->initObsidian();
         $io = new SymfonyStyle($input, $output);
         $fileName = $io->ask('What is the controller name ?');
-        
-        // Make controller
-        $controllerPath = dirname(__DIR__, 2) . '/App/Http/Controller/' . $fileName . 'Controller.php';
-        $controllerRoute = strtolower($fileName);
-        $placeholders = [
-            '{{name}}' => $fileName,
-            '{{view}}' => $fileName,
-            '{{route}}' => $controllerRoute,
-        ];
-        $createController = $this->generateClass($this->getFileTemplate('controller'), $controllerPath, $placeholders);
 
-        // Make view
-        $viewPath = dirname(__DIR__, 2) . '/App/View/' . strtolower($fileName) . '.view.php';
-        $placeholders = [
-            '{{viewPath}}' => $viewPath,
-            '{{controllerPath}}' => $controllerPath,
-            '{{name}}' => $fileName,
-        ];
-        $createView = $this->generateClass($this->getFileTemplate('view'), $viewPath, $placeholders);
+        $createController = $this->createControllerFile($fileName);
+        $createView = $this->createViewFile($fileName);
 
         if ($createController && $createView)
         {
@@ -47,5 +31,28 @@ class MakeControllerCommand extends \Core\Command
         }
 
         return COMMAND::SUCCESS;
+    }
+
+    public function createControllerFile(string $fileName): bool
+    {
+        $controllerPath = dirname(__DIR__, 2) . '/App/Http/Controller/' . $fileName . 'Controller.php';
+        $controllerRoute = strtolower($fileName);
+        $placeholders = [
+            '{{name}}' => $fileName,
+            '{{view}}' => $fileName,
+            '{{route}}' => $controllerRoute,
+        ];
+        return $this->generateClass($this->getFileTemplate('controller'), $controllerPath, $placeholders);
+    }
+
+    public function createViewFile(string $fileName): bool
+    {
+        $viewPath = dirname(__DIR__, 2) . '/App/View/' . strtolower($fileName) . '.view.php';
+        $placeholders = [
+            '{{viewPath}}' => $viewPath,
+            '{{controllerPath}}' => 'NaN',
+            '{{name}}' => $fileName,
+        ];
+        return $this->generateClass($this->getFileTemplate('view'), $viewPath, $placeholders);
     }
 }

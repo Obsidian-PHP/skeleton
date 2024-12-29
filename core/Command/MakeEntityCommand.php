@@ -16,45 +16,63 @@ class MakeEntityCommand extends \Core\Command
 {
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $this->initObsidian();
-        $filesystem = new Filesystem();        
-
+        $this->initObsidian();     
         $io = new SymfonyStyle($input, $output);
+
         $entityName = $io->ask('What is the entity name ?');
+        $propertyName = strtolower($entityName) . 'Repository';
+        $tableName = strtolower($entityName) . 's';
 
-        if ($entityName)
-        {
-            // Make Repository
-            $templatePath = dirname(__DIR__, 1).'/Template/template_repository.php';
-            $repositoryPath = dirname(__DIR__, 2) . '/app/Domain/' . $entityName . '/' . $entityName . 'Repository.php';
-            $propertyName = strtolower($entityName) . 'Repository';
-            $className = $entityName . 'Repository';
-            $tableName = strtolower($entityName) . 's';
-
-            $placeholders = [
-                '{{propertyName}}' => $propertyName,
-                '{{className}}' => $className,
-                '{{tableName}}' => $tableName,
-                '{{entityName}}' => $entityName
-            ];
-            $req = $this->generateClass($templatePath, $repositoryPath, $placeholders);
-
-            
-            if ($req)
-            {
-                // Create property
-                $filename = dirname(__DIR__, 2) . '/app/Registry/RegisterContainer.php';
-                $currentContent = file_get_contents($filename);
-                $newPropertyCode = "\n    public \$".$propertyName.";\n";
-                $updatedContent = preg_replace(
-                    '/class\s+(\w+)\s*\{/',
-                    "class $1 {\n$newPropertyCode",
-                    $currentContent
-                );
-                $filesystem->dumpFile($filename, $updatedContent);
-            }
-        }
+        $createController = $this->createRepositoryFile($entityName, $propertyName, $tableName);
+        $createMigration = $this->createMigrationFile($entityName, $tableName);
         
+        if ($createController && $createMigration)
+        {
+            $this->createProperty($propertyName);
+            $io->success('Successfull creating repository');
+            $io->success('Successfull creating migration');
+        } else {
+            $io->error('Hmmm ! Error');
+        }
+
         return COMMAND::SUCCESS;
+    }
+
+    public function createRepositoryFile(string $entityName, string $propertyName, string $tableName): bool
+    {
+        $filePath = dirname(__DIR__, 2) . '/app/Domain/' . $entityName . '/' . $entityName . 'Repository.php';
+        $className = $entityName . 'Repository';
+
+        $placeholders = [
+            '{{propertyName}}' => $propertyName,
+            '{{className}}' => $className,
+            '{{tableName}}' => $tableName,
+            '{{entityName}}' => $entityName
+        ];
+        return $this->generateClass($this->getFileTemplate('repository'), $filePath, $placeholders);
+    }
+
+    public function createMigrationFile(string $entityName, string $tableName): bool
+    {
+        $filePath = dirname(__DIR__, 2) . '/App/Migration/' . $entityName . 'Migration.php';
+        $placeholders = [
+            '{{name}}' => $entityName,
+            '{{tableName}}' => $tableName
+        ];
+        return $this->generateClass($this->getFileTemplate('migration'), $filePath, $placeholders);
+    }
+
+    public function createProperty(string $propertyName): void
+    {
+        $filesystem = new Filesystem();
+        $filename = dirname(__DIR__, 2) . '/app/Registry/RegisterContainer.php';
+        $currentContent = file_get_contents($filename);
+        $newPropertyCode = "\n    public \$".$propertyName.";\n";
+        $updatedContent = preg_replace(
+            '/class\s+(\w+)\s*\{/',
+            "class $1 {\n$newPropertyCode",
+            $currentContent
+        );
+        $filesystem->dumpFile($filename, $updatedContent);
     }
 }

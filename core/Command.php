@@ -29,4 +29,14 @@ class Command extends \Symfony\Component\Console\Command\Command
             return false;
         }
     }
+
+    public function getFileTemplate(string $name): string
+    {
+        try {
+            return sprintf(__DIR__.'/Template/%s.template', $name);
+        } catch (\Exception $th) {
+            return sprintf('Error : %s', $th);  
+        }
+        
+    }
 }

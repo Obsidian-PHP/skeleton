@@ -14,11 +14,6 @@ use Symfony\Component\Filesystem\Filesystem;
 )]
 class MakeEntityCommand extends \Core\Command
 {
-    protected function configure(): void
-    {
-
-    }
-
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $this->initObsidian();

@@ -5,7 +5,7 @@ use Core\Controller;
 use Core\Http\Router\Route;
 use Core\View;
 
-class {{name}} extends Controller
+class {{name}}Controller extends Controller
 {
     #[Route('/{{route}}', 'GET')]
     public function list(): view

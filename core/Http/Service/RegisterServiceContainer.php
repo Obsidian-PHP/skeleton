@@ -1,10 +1,6 @@
 <?php
 namespace Core\Http\Service;
 
-use App\Domain\Auth\Event\LoginFailureEvent;
-use App\Domain\Auth\Event\LoginSuccessEvent;
-use App\Domain\Auth\Event\UserBannedEvent;
-use App\Domain\Auth\Listener\LoginListener;
 use App\Registry\RegisterContainer;
 use Core\File;
 use Core\Http\Listener\EventDispatcher;
@@ -87,7 +83,7 @@ class RegisterServiceContainer extends RegisterContainer
 
     public function registerListener(): void
     {
-       // $listenerProvider = (new ListenerProvider());
-        //$this->dispatcher = new EventDispatcher($listenerProvider);
+        $listenerProvider = (new ListenerProvider());
+        $this->dispatcher = new EventDispatcher($listenerProvider);
     }
 }

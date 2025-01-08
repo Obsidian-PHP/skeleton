@@ -1,5 +1,6 @@
 <?php
 namespace Core;
+use Core\Command\MakeAuthPackage;
 use Core\Command\MakeControllerCommand;
 use Core\Command\MakeEntityCommand;
 use Core\Command\MigrateCommand;
@@ -13,6 +14,7 @@ class RegisterCommand {
         $commmandManager->add(new MigrateCommand());
         $commmandManager->add(new MakeControllerCommand());
         $commmandManager->add(new MakeEntityCommand());
+        $commmandManager->add(new MakeAuthPackage());
 
         // Auto register command
         Container::get()->registerCommand($commmandManager);

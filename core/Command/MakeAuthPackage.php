@@ -14,39 +14,50 @@ use Symfony\Component\Filesystem\Filesystem;
 )]
 class MakeAuthPackage extends \Core\Command
 {
+    
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $this->initObsidian();
         $io = new SymfonyStyle($input, $output);
         
-        $this->createFileAndFolder();
-        $this->createProperty();
+        $this->initObsidian();        
+        $this->createFileAndFolder($io);
+        $this->createProperty($io);
 
         return COMMAND::SUCCESS;
     }
 
-    public function createFileAndFolder(): void
+    public function createFileAndFolder(SymfonyStyle $io): void
     {
         $filesystem = new Filesystem();
         $sourceFolder = dirname(__DIR__, 1).'/Template/Package/User/';
         $finalFolder = dirname(__DIR__, 2).'/App';
-        $filesystem->mirror($sourceFolder, $finalFolder);
+
+        try {
+            $filesystem->mirror($sourceFolder, $finalFolder);
+            $io->success('Successfully created Package');
+        } catch (\Throwable $th) {
+            $io->error('Error: ' . $th);
+        }
     }
 
-    public function createProperty(): void
+    public function createProperty(SymfonyStyle $io): void
     {
         $filesystem = new Filesystem();
         $filename = dirname(__DIR__, 2) . '/app/Registry/RegisterContainer.php';
         $currentContent = file_get_contents($filename);
         $newPropertyCode = "    public \$authService;\n    public \$userService;\n    public \$userRepository;";
 
-
         $updatedContent = preg_replace(
             '/class\s+(\w+)\s*\{/',
             "class $1 {\n$newPropertyCode",
             $currentContent
         );
-        
-        $filesystem->dumpFile($filename, $updatedContent);
+
+        try {
+            $filesystem->dumpFile($filename, $updatedContent);
+            $io->success('Successfully created Properties');
+        } catch (\Throwable $th) {
+            $io->error('Error: ' . $th);
+        }
     }
 }

@@ -3,6 +3,7 @@
     [[head]]
     <body>
         [[content]]
+        [[flash_message]]
         [[foot]]
     </body>
 </html>

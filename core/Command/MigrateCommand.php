@@ -16,38 +16,30 @@ use Core\Database\Database;
 )]
 class MigrateCommand extends \Core\Command
 {
-    protected function configure(): void
-    {
-        $this->addArgument('file', InputArgument::REQUIRED, 'File migration');
-    }
-
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $this->initObsidian();
         $io = new SymfonyStyle($input, $output);
-        $file = $input->getArgument('file');
+        //$entityName = $io->ask('What is the entity name ?');
 
-        $db = new Database();
-        $db->connection();
+        //$io->success("Arg: " . $entityName);
 
-        $req = DB::table('migrations')
-                ->where(['file' => $file])
-                ->get();
-        
-        if ($req[0])
+        $folderPath = dirname(__DIR__, 2) . '/app/Migration';
+        $classes = getClassesWithNamespacesRecursively($folderPath);
+        foreach ($classes as $class)
         {
-            if (class_exists($req[0]->class))
-            {
-                $migrate = new $req[0]->class();
-                $migrate->up();
-                
-                $io->success('Migration successful');
-            } else {
-                $io->error('Migration class does not exist');
+            $class = new $class();           
+
+            try {
+                $class->up();
+                $io->success(get_class($class));
+            } catch (\Throwable $th) {
+                $io->error(get_class($class));
             }
-        } else {
-            $io->error('Migration does not exist');
         }
+
+        //$migrate = new $req[0]->class();
+        //$migrate->up();
 
         return COMMAND::SUCCESS;
     }

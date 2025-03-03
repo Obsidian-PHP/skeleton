@@ -1,5 +1,5 @@
 <?php
-namespace application\migrations;
+namespace App\Migration;
 
 use Core\Database\Migration\Migration;
 use Core\Database\Migration\MigrationInterface;

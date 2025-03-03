@@ -20,16 +20,12 @@ class MigrateCommand extends \Core\Command
     {
         $this->initObsidian();
         $io = new SymfonyStyle($input, $output);
-        //$entityName = $io->ask('What is the entity name ?');
-
-        //$io->success("Arg: " . $entityName);
 
         $folderPath = dirname(__DIR__, 2) . '/app/Migration';
         $classes = getClassesWithNamespacesRecursively($folderPath);
         foreach ($classes as $class)
         {
             $class = new $class();           
-
             try {
                 $class->up();
                 $io->success(get_class($class));
@@ -37,9 +33,6 @@ class MigrateCommand extends \Core\Command
                 $io->error(get_class($class));
             }
         }
-
-        //$migrate = new $req[0]->class();
-        //$migrate->up();
 
         return COMMAND::SUCCESS;
     }

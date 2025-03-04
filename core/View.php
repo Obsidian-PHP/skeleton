@@ -34,7 +34,7 @@ final class View
         ob_start();
 
         require_once Application::$ROOT_DIR .
-            DIRECTORY_SEPARATOR . 'App/View' .
+            DIRECTORY_SEPARATOR . 'app/View' .
             DIRECTORY_SEPARATOR . $this->name . self::VIEW_EXTENS;
 
         return ob_get_clean();
@@ -52,7 +52,7 @@ final class View
         ob_start();
 
         require_once Application::$ROOT_DIR .
-            DIRECTORY_SEPARATOR . 'App/View' .
+            DIRECTORY_SEPARATOR . 'app/View' .
             DIRECTORY_SEPARATOR . 'layouts' .
             DIRECTORY_SEPARATOR . $this->layout . self::LAYOUT_EXTENS;
 
@@ -68,7 +68,7 @@ final class View
         ob_start();
 
         require_once Application::$ROOT_DIR .
-        DIRECTORY_SEPARATOR . 'App/View' .
+        DIRECTORY_SEPARATOR . 'app/View' .
         DIRECTORY_SEPARATOR . 'partials' .
         DIRECTORY_SEPARATOR . $partial . self::PARTIAL_EXTENS;
 

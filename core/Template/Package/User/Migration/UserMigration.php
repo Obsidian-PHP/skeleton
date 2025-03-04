@@ -20,8 +20,8 @@ class UserMigration extends Migration implements MigrationInterface
             $table->string('email');
             $table->string('password');
             $table->string('role');
-            $table->dateTime('login_attempt');
-            $table->integer('last_login');
+            $table->integer('login_attempt');
+            $table->dateTime('last_login');
             $table->integer('status');
         });
     }

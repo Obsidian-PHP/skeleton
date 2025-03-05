@@ -35,12 +35,12 @@ class MakeControllerCommand extends \Core\Command
 
     public function createControllerFile(string $fileName): bool
     {
-        $controllerPath = dirname(__DIR__, 2) . '/App/Http/Controller/' . $fileName . 'Controller.php';
+        $controllerPath = dirname(__DIR__, 2) . '/App/Http/Controller/' . ucfirst($fileName) . 'Controller.php';
         $controllerRoute = strtolower($fileName);
         $placeholders = [
-            '{{name}}' => $fileName,
-            '{{view}}' => $fileName,
-            '{{route}}' => $controllerRoute,
+            '{{name}}' => ucfirst($fileName),
+            '{{view}}' => strtolower($fileName),
+            '{{route}}' => strtolower($controllerRoute),
         ];
         return $this->generateClass($this->getFileTemplate('controller'), $controllerPath, $placeholders);
     }

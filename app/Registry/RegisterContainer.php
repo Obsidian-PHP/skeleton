@@ -3,4 +3,5 @@
 namespace App\Registry;
 
 class RegisterContainer {
+
 }

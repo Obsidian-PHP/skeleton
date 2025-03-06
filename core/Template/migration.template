@@ -14,7 +14,7 @@ class {{name}}Migration extends Migration implements MigrationInterface
      */
     public function up(): void
     {
-        $this->schema->create('{{tableName}}', function (Blueprint $table) {
+        $this->schema->create('{{tableName}}s', function (Blueprint $table) {
             $table->id();
         });
     }

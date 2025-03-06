@@ -21,7 +21,7 @@ class MakeEntityCommand extends \Core\Command
 
         $entityName = $io->ask('What is the entity name ?');
         $propertyName = strtolower($entityName) . 'Repository';
-        $tableName = strtolower($entityName) . 's';
+        $tableName = strtolower($entityName);
 
         $createController = $this->createRepositoryFile($entityName, $propertyName, $tableName);
         $createMigration = $this->createMigrationFile($entityName, $tableName);
@@ -40,24 +40,24 @@ class MakeEntityCommand extends \Core\Command
 
     public function createRepositoryFile(string $entityName, string $propertyName, string $tableName): bool
     {
-        $filePath = dirname(__DIR__, 2) . '/app/Domain/' . $entityName . '/' . $entityName . 'Repository.php';
+        $filePath = dirname(__DIR__, 2) . '/app/Domain/' . ucfirst($entityName) . '/' . ucfirst($entityName) . 'Repository.php';
         $className = $entityName . 'Repository';
 
         $placeholders = [
             '{{propertyName}}' => $propertyName,
-            '{{className}}' => $className,
-            '{{tableName}}' => $tableName,
-            '{{entityName}}' => $entityName
+            '{{className}}' => ucfirst($className),
+            '{{tableName}}' => strtolower($tableName),
+            '{{entityName}}' => ucfirst( $entityName)
         ];
         return $this->generateClass($this->getFileTemplate('repository'), $filePath, $placeholders);
     }
 
     public function createMigrationFile(string $entityName, string $tableName): bool
     {
-        $filePath = dirname(__DIR__, 2) . '/App/Migration/' . $entityName . 'Migration.php';
+        $filePath = dirname(__DIR__, 2) . '/App/Migration/' . ucfirst($entityName) . 'Migration.php';
         $placeholders = [
-            '{{name}}' => $entityName,
-            '{{tableName}}' => $tableName
+            '{{name}}' => ucfirst($entityName),
+            '{{tableName}}' => strtolower($tableName)
         ];
         return $this->generateClass($this->getFileTemplate('migration'), $filePath, $placeholders);
     }

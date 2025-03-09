@@ -13,10 +13,4 @@ class HomeController extends Controller
     {
         return $this->view('home');
     }
-
-    #[Route('/crud', 'GET', 'default')]
-    public function list(Request $_request): view
-    {
-        return $this->view('Crud/create');
-    }
 }

@@ -1,11 +1,14 @@
 <?php
 namespace Core\Command;
 
+use PhpParser\Node\Expr\Cast\Bool_;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Question\ConfirmationQuestion;
 use Symfony\Component\Console\Style\SymfonyStyle;
+use Symfony\Component\Filesystem\Filesystem;
 
 #[AsCommand(
     name: 'make:controller',
@@ -17,10 +20,28 @@ class MakeControllerCommand extends \Core\Command
     {
         $this->initObsidian();
         $io = new SymfonyStyle($input, $output);
+
         $fileName = $io->ask('What is the controller name ?');
 
-        $createController = $this->createControllerFile($fileName);
-        $createView = $this->createViewFile($fileName);
+        $inFolder = $io->ask('View in folder ? | yes or no');
+
+        $createView = '';
+
+        if ($inFolder === 'yes')
+        {
+            $createView = $this->createViewFile($fileName, true);
+            dump('yes');
+        }
+        if ($inFolder === 'no')
+        {
+            $createView = $this->createViewFile($fileName, false);
+            dump('no');
+        }
+
+        if ($createView)
+        {
+            $createController = $this->createControllerFile($fileName);
+        }
 
         if ($createController && $createView)
         {
@@ -45,9 +66,24 @@ class MakeControllerCommand extends \Core\Command
         return $this->generateClass($this->getFileTemplate('controller'), $controllerPath, $placeholders);
     }
 
-    public function createViewFile(string $fileName): bool
+    public function createViewFile(string $fileName, bool $inFolder): bool
     {
-        $viewPath = dirname(__DIR__, 2) . '/App/View/' . strtolower($fileName) . '.view.php';
+        $viewFolder = dirname(__DIR__, 2) . '/App/View/';
+
+        if ($inFolder) {
+            $fileSystem = new Filesystem();
+
+            try {
+                $fileSystem->mkdir($viewFolder . '/' . ucfirst($fileName), 0700);
+            } catch (\Throwable $th) {
+                // Error
+            }
+
+            $viewPath = $viewFolder . ucfirst($fileName) . '/home.view.php';
+        } else {
+            $viewPath = $viewFolder . strtolower($fileName) . '.view.php';
+        }
+
         $placeholders = [
             '{{viewPath}}' => $viewPath,
             '{{controllerPath}}' => 'NaN',

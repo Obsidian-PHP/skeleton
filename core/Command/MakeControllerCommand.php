@@ -30,17 +30,12 @@ class MakeControllerCommand extends \Core\Command
         if ($inFolder === 'yes')
         {
             $createView = $this->createViewFile($fileName, true);
-            dump('yes');
+            $createController = $this->createControllerFile($fileName, true);
         }
         if ($inFolder === 'no')
         {
             $createView = $this->createViewFile($fileName, false);
-            dump('no');
-        }
-
-        if ($createView)
-        {
-            $createController = $this->createControllerFile($fileName);
+            $createController = $this->createControllerFile($fileName, false);
         }
 
         if ($createController && $createView)
@@ -54,15 +49,24 @@ class MakeControllerCommand extends \Core\Command
         return COMMAND::SUCCESS;
     }
 
-    public function createControllerFile(string $fileName): bool
+    public function createControllerFile(string $fileName, bool $inFolder): bool
     {
         $controllerPath = dirname(__DIR__, 2) . '/App/Http/Controller/' . ucfirst($fileName) . 'Controller.php';
         $controllerRoute = strtolower($fileName);
+
+        if ($inFolder)
+        {
+            $viewPath = ucfirst($fileName) . '/home';
+        } else {
+            $viewPath = strtolower($fileName);
+        }
+
         $placeholders = [
             '{{name}}' => ucfirst($fileName),
-            '{{view}}' => strtolower($fileName),
+            '{{view}}' => $viewPath, 
             '{{route}}' => strtolower($controllerRoute),
         ];
+
         return $this->generateClass($this->getFileTemplate('controller'), $controllerPath, $placeholders);
     }
 

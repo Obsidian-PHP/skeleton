@@ -4,3 +4,4 @@ vendor
 tests
 deploy.sh
 .env
+app
